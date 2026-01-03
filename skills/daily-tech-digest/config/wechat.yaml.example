@@ -1,0 +1,30 @@
+# 微信公众号配置模板
+# 复制此文件为 wechat.yaml 并填入你的凭证
+
+wechat:
+  # 公众号 AppID（在公众号后台 → 开发 → 基本配置 中获取）
+  app_id: "wx..."
+  
+  # 公众号 AppSecret（⚠️ 敏感信息，勿泄露！）
+  # 获取后请妥善保存，平台不会再次显示
+  app_secret: "..."
+  
+  # 封面图 media_id（首次上传后保存复用）
+  # 使用 quickstart.py 上传封面图后获取
+  cover_media_id: "..."
+  
+  # 是否自动发布（建议 false，人工审核后再发布）
+  auto_publish: false
+
+# 使用方式：
+# 
+# 方式1: 环境变量（推荐）
+#   export WECHAT_APP_ID=wx...
+#   export WECHAT_APP_SECRET=...
+#   export WECHAT_COVER_ID=...
+#
+# 方式2: 代码中直接传入
+#   publisher = TechDigestPublisher(
+#       app_id="wx...",
+#       app_secret="..."
+#   )
