@@ -5,11 +5,5 @@
   "author": {
     "name": "sawzhang"
   },
-  "skills": [
-    {
-      "name": "mcp-review",
-      "path": "skills/mcp-review/SKILL.md",
-      "description": "MCP Server 工具设计审查，按 10 条准则输出结构化报告"
-    }
-  ]
+  "skills": "./skills/"
 }
