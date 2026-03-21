@@ -2,17 +2,11 @@
 
 可复用的 Claude Code skills 集合。
 
-## 安装
-
-```bash
-pip install -r requirements.txt
-```
-
 ## Skills 列表
 
 | Skill | 描述 | 触发词 |
 |-------|------|--------|
-| [daily-tech-digest](skills/daily-tech-digest/) | 每日技术日报，聚合 HN/PH/AI 动态 | "今日技术日报"、"生成 newsletter" |
+| [mcp-review](skills/mcp-review/) | MCP Server 工具设计审查，按 10 条准则输出结构化报告 | "review mcp tools"、"检查工具设计" |
 
 ## 使用方式
 
@@ -20,10 +14,10 @@ pip install -r requirements.txt
 
 ```bash
 # macOS/Linux
-cp -r skills/daily-tech-digest ~/.claude/skills/
+cp -r skills/<skill-name> ~/.claude/skills/
 
 # 或创建软链接
-ln -s $(pwd)/skills/daily-tech-digest ~/.claude/skills/daily-tech-digest
+ln -s $(pwd)/skills/<skill-name> ~/.claude/skills/<skill-name>
 ```
 
 ### 方式 2: 直接在对话中触发
