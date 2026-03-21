@@ -1,0 +1,16 @@
+{
+  "name": "sawzhang-skills",
+  "owner": {
+    "name": "sawzhang"
+  },
+  "plugins": [
+    {
+      "name": "sawzhang-skills",
+      "source": {
+        "source": "github",
+        "repo": "sawzhang/sawzhang_skills"
+      },
+      "description": "可复用的 Claude Code skills 集合，包含 MCP Server 工具设计审查等实用技能"
+    }
+  ]
+}

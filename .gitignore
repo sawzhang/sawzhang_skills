@@ -1,33 +1,19 @@
-# Sensitive files
-config/wechat.yaml
-**/wechat.yaml
-.wechat_token_cache.json
-**/.wechat_token_cache.json
-
-# Generated outputs
-scripts/output/
-**/output/
-**/logs/
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-.venv/
-venv/
-ENV/
-.env
+# OS
+.DS_Store
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
-.DS_Store
 
-# Test/Coverage
-.pytest_cache/
-.coverage
-htmlcov/
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Generated
+**/output/
+**/logs/

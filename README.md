@@ -1,6 +1,6 @@
 # Claude Code Skills
 
-可复用的 Claude Code skills 集合。
+可复用的 Claude Code skills 集合，通过 Plugin Marketplace 分发。
 
 ## Skills 列表
 
@@ -8,24 +8,46 @@
 |-------|------|--------|
 | [mcp-review](skills/mcp-review/) | MCP Server 工具设计审查，按 10 条准则输出结构化报告 | "review mcp tools"、"检查工具设计" |
 
-## 安装 mcp-review
+## 安装
 
-```bash
-# 1. 克隆仓库
-git clone https://github.com/sawzhang/sawzhang_skills.git
-cd sawzhang_skills
+在 Claude Code 中执行以下命令：
 
-# 2. 复制到 Claude Code skills 目录
-cp -r skills/mcp-review ~/.claude/skills/
+```
+# 1. 添加 Marketplace
+/plugin marketplace add sawzhang/sawzhang_skills
 
-# 或创建软链接（方便后续 git pull 自动同步更新）
-ln -s $(pwd)/skills/mcp-review ~/.claude/skills/mcp-review
+# 2. 安装插件
+/plugin install sawzhang-skills@sawzhang-skills
+
+# 3. 重载插件
+/reload-plugins
 ```
 
-安装完成后，在 Claude Code 中说 "review mcp tools" 或 "检查工具设计" 即可触发审查。
+安装完成后，说 "review mcp tools" 或 "检查工具设计" 即可触发 MCP 工具审查。
+
+## 团队配置
+
+在项目的 `.claude/settings.json` 中添加，团队成员打开项目时自动提示安装：
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "sawzhang-skills": {
+      "source": {
+        "source": "github",
+        "repo": "sawzhang/sawzhang_skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "sawzhang-skills@sawzhang-skills": true
+  }
+}
+```
 
 ## 添加新 Skill
 
 1. 在 `skills/` 下创建新目录
 2. 添加 `SKILL.md`（必须），格式参考现有 skill
-3. 添加相关脚本和配置
+3. 在 `.claude-plugin/plugin.json` 中注册新 skill
+4. 添加相关脚本和配置
