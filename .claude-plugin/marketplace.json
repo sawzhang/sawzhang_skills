@@ -1,16 +1,16 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "sawzhang-skills",
+  "description": "可复用的 Claude Code skills 集合，包含 MCP Server 工具设计审查等实用技能",
   "owner": {
     "name": "sawzhang"
   },
   "plugins": [
     {
       "name": "sawzhang-skills",
-      "source": {
-        "source": "github",
-        "repo": "sawzhang/sawzhang_skills"
-      },
-      "description": "可复用的 Claude Code skills 集合，包含 MCP Server 工具设计审查等实用技能"
+      "description": "可复用的 Claude Code skills 集合，包含 MCP Server 工具设计审查等实用技能",
+      "source": "./plugins/sawzhang-skills",
+      "category": "development"
     }
   ]
 }

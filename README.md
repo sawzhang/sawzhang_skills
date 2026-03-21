@@ -6,8 +6,8 @@
 
 | Skill | 描述 | 触发词 |
 |-------|------|--------|
-| [mcp-review](skills/mcp-review/) | MCP Server 工具设计审查，按 10 条准则输出结构化报告 | "review mcp tools"、"检查工具设计" |
-| [auto-iterate](skills/auto-iterate/) | 自主迭代优化，持续改进指定指标 | "自动迭代"、"auto iterate" |
+| [mcp-review](plugins/sawzhang-skills/skills/mcp-review/) | MCP Server 工具设计审查，按 10 条准则输出结构化报告 | "review mcp tools"、"检查工具设计" |
+| [auto-iterate](plugins/sawzhang-skills/skills/auto-iterate/) | 自主迭代优化，持续改进指定指标 | "自动迭代"、"auto iterate" |
 
 ## 安装
 
@@ -46,9 +46,22 @@
 }
 ```
 
+## 目录结构
+
+```
+.claude-plugin/
+  marketplace.json          # Marketplace 定义（指向 plugins/ 下的插件）
+plugins/
+  sawzhang-skills/
+    .claude-plugin/
+      plugin.json           # Plugin 元数据
+    skills/
+      mcp-review/           # MCP 工具审查 skill
+      auto-iterate/         # 自主迭代优化 skill
+```
+
 ## 添加新 Skill
 
-1. 在 `skills/` 下创建新目录
+1. 在 `plugins/sawzhang-skills/skills/` 下创建新目录
 2. 添加 `SKILL.md`（必须），格式参考现有 skill
-3. 在 `.claude-plugin/plugin.json` 中注册新 skill
-4. 添加相关脚本和配置
+3. 添加相关脚本和配置
