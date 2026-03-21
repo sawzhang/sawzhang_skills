@@ -7,6 +7,7 @@
 | Skill | 描述 | 触发词 |
 |-------|------|--------|
 | [mcp-review](skills/mcp-review/) | MCP Server 工具设计审查，按 10 条准则输出结构化报告 | "review mcp tools"、"检查工具设计" |
+| [auto-iterate](skills/auto-iterate/) | 自主迭代优化，持续改进指定指标 | "自动迭代"、"auto iterate" |
 
 ## 安装
 
