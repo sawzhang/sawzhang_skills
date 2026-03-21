@@ -8,37 +8,24 @@
 |-------|------|--------|
 | [mcp-review](skills/mcp-review/) | MCP Server 工具设计审查，按 10 条准则输出结构化报告 | "review mcp tools"、"检查工具设计" |
 
-## 使用方式
-
-### 方式 1: 复制到 Claude Code skills 目录
+## 安装 mcp-review
 
 ```bash
-# macOS/Linux
-cp -r skills/<skill-name> ~/.claude/skills/
+# 1. 克隆仓库
+git clone https://github.com/sawzhang/sawzhang_skills.git
+cd sawzhang_skills
 
-# 或创建软链接
-ln -s $(pwd)/skills/<skill-name> ~/.claude/skills/<skill-name>
+# 2. 复制到 Claude Code skills 目录
+cp -r skills/mcp-review ~/.claude/skills/
+
+# 或创建软链接（方便后续 git pull 自动同步更新）
+ln -s $(pwd)/skills/mcp-review ~/.claude/skills/mcp-review
 ```
 
-### 方式 2: 直接在对话中触发
-
-在 Claude Code 中说出触发词即可执行对应 skill。
+安装完成后，在 Claude Code 中说 "review mcp tools" 或 "检查工具设计" 即可触发审查。
 
 ## 添加新 Skill
 
 1. 在 `skills/` 下创建新目录
 2. 添加 `SKILL.md`（必须），格式参考现有 skill
 3. 添加相关脚本和配置
-
-## 目录结构
-
-```
-├── skills/
-│   └── <skill-name>/
-│       ├── SKILL.md           # Skill 定义（必须）
-│       ├── config/            # 配置文件
-│       ├── references/        # 参考资料
-│       └── scripts/           # 脚本
-├── requirements.txt
-└── README.md
-```
