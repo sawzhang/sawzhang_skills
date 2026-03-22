@@ -98,18 +98,24 @@ bu click {索引号} && sleep 3 && bu state 2>&1
 直接导航到新 URL（不要用搜索框填充，容易出错）：
 
 ```bash
-sleep 5  # Twitter 限速间隔
+sleep 8  # Twitter 搜索限速间隔，不能低于 8 秒
 bu open "https://x.com/search?q={下一个关键词}&src=typed_query&f=top"
 sleep 3
 bu state 2>&1
 ```
 
-#### 限速恢复
+#### 限速防护（关键！）
 
-如果页面显示"出错了"或 state 输出只有空 div：
-1. 等待更长时间：`sleep 10`
-2. 刷新页面：`bu eval "location.reload()"` 然后 `sleep 5`
-3. 如果连续两次限速，停止 browser-use 搜索，降级到方式 B
+Twitter 搜索限速非常严格。**每次搜索之间必须间隔 8-10 秒**，否则搜索结果会一直转圈加载不出来。
+
+症状识别：页面能显示搜索框和标签栏，但内容区域持续转圈（主页 `/home` 正常加载）。
+
+恢复策略：
+1. 停止搜索，等待 2-3 分钟让限速解除
+2. 先访问主页 `bu open "https://x.com/home"` 验证网络正常
+3. 再尝试搜索简单词（如 `hello`）验证搜索功能恢复
+4. 恢复后继续，但加大间隔到 10 秒
+5. 如果 5 分钟后仍无法搜索，降级到方式 B
 
 ### Step 4: 降级方案 — fxtwitter API
 
@@ -180,9 +186,10 @@ bu close 2>/dev/null
 
 | 症状 | 原因 | 解决 |
 |------|------|------|
-| `socksio package not installed` | 系统 SOCKS 代理干扰 CDP | 用 `bu()` wrapper 清除代理 |
+| `socksio package not installed` | 系统 SOCKS 代理干扰 CDP | 用 `bu()` wrapper 清除 CLI 进程的代理（Chrome 自身走系统代理，不受影响） |
 | `CDP connection: invalid HTTP response` | 旧 session 残留 | `bu close` 后重试 |
 | `Browser startup timeout` | Chromium 未安装 | `browser-use install` |
-| state 只有空 div | 无登录态 | 用 `-b real` 模式 |
-| "出错了" 页面 | Twitter 限速 | 等 10 秒后 `eval "location.reload()"` |
+| state 只有空 div | 无登录态（Chromium 模式） | 用 `-b real` 复用真实 Chrome 登录态 |
+| 搜索页持续转圈，主页正常 | **Twitter 搜索限速**（最常见） | 等 2-3 分钟恢复，加大间隔到 10 秒 |
 | `curl install.sh` 没装到 browser-use | 那个脚本只装 profile-use | 用 `uv tool install browser-use` |
+| `-b real` 模式需要配代理吗？ | **不需要** | Chrome 自己走系统代理，`bu()` 只清 CLI 进程的代理 |
