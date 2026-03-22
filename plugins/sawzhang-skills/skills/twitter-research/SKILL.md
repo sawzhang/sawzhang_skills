@@ -1,17 +1,12 @@
 ---
 name: twitter-research
 description: 搜索Twitter/X上特定话题的最新内容并汇总报告。当用户说"搜Twitter"、"查看Twitter上关于XX的讨论"、"twitter research"、"X上最近在聊什么"时使用。
-allowed-tools: Bash, Read, Write, WebFetch, WebSearch, mcp__chrome_devtools__navigate_page, mcp__chrome_devtools__take_snapshot, mcp__chrome_devtools__wait_for, mcp__chrome_devtools__evaluate_script, mcp__chrome_devtools__fill, mcp__chrome_devtools__click, mcp__exa__web_search_exa
+allowed-tools: Bash, Read, Write, Glob, Grep
 ---
 
 # Twitter/X 话题搜索与汇总
 
-通过 Chrome DevTools MCP 在已登录的 Chrome 浏览器中搜索 Twitter/X，抓取多个关键词的热门和最新推文，汇总成结构化报告。
-
-## 前置条件
-
-- Chrome DevTools MCP server 已连接（通过 `mcp__chrome_devtools__*` 工具）
-- Chrome 浏览器已登录 Twitter/X 账号
+通过多种方式搜索 Twitter/X 上的热门内容，汇总成结构化报告。
 
 ## 流程
 
@@ -21,66 +16,87 @@ allowed-tools: Bash, Read, Write, WebFetch, WebSearch, mcp__chrome_devtools__nav
 
 1. **核心关键词**: 用户原始话题（如 `AI Agent`）
 2. **细分关键词**: 话题 + 限定词（如 `AI Agent framework 2026`、`AI Agent 开源`）
-3. **关联产品/项目**: 话题相关的热门项目名（如 `OpenClaw`、`Claude Code`、`MCP server`）
+3. **关联产品/项目**: 话题相关的热门项目名（如 `Claude Code`、`Cursor`、`MCP server`）
 4. **中英文双搜**: 同一话题分别用中文和英文搜索
 
 告诉用户将要搜索的关键词列表，然后开始执行。
 
-### Step 2: 逐个关键词搜索
+### Step 2: 搜索推文
 
-对每个关键词执行以下操作：
+优先级从高到低，使用第一个可用的方式：
 
-#### 2a. 导航到搜索页
+#### 方式 A: Browser Use CLI（推荐，需已安装）
 
+检查 `browser-use` 是否可用：
+
+```bash
+which browser-use 2>/dev/null && echo "AVAILABLE" || echo "NOT_AVAILABLE"
 ```
-使用 mcp__chrome_devtools__navigate_page 导航到:
-https://x.com/search?q={URL编码的关键词}&src=typed_query&f=top
+
+如果可用，对每个关键词：
+
+```bash
+# 打开 Twitter 搜索页（热门）
+browser-use open "https://x.com/search?q={URL编码的关键词}&src=typed_query&f=top"
+
+# 获取页面状态（可点击元素列表）
+browser-use state
+
+# 滚动加载更多
+browser-use scroll down
+
+# 再次获取状态
+browser-use state
 ```
 
-如果导航超时但 URL 已变化，继续下一步。
+从 state 输出中提取推文内容。
 
-#### 2b. 检查登录状态
+#### 方式 B: fxtwitter API + WebSearch
 
-使用 `mcp__chrome_devtools__wait_for` 等待页面加载，检查是否出现登录弹窗。
-- 如果出现登录页面：通知用户需要手动登录，暂停
-- 如果直接显示搜索结果：继续
+如果 browser-use 不可用，使用 Bash 执行搜索：
 
-#### 2c. 抓取"热门"标签内容
+```bash
+# 1. 用 WebSearch 搜索 Twitter 上的内容
+# （在 skill 流程中直接调用 WebSearch 工具，query 为: "{关键词} site:x.com"）
 
-使用 `mcp__chrome_devtools__take_snapshot` 获取页面快照。
-从快照中提取每条推文的：
+# 2. 对搜索到的推文 URL，用 fxtwitter API 获取详情
+# 从 URL 提取 username 和 tweet_id，然后：
+curl -s "https://api.fxtwitter.com/{username}/status/{tweet_id}"
+```
+
+解析 JSON 提取推文数据（正文、作者、互动数等）。
+
+#### 方式 C: 纯 curl 搜索
+
+如果以上都不可用，用 Nitter 实例或其他公开 API：
+
+```bash
+# 尝试 Nitter 搜索
+curl -s "https://nitter.net/search?f=tweets&q={URL编码的关键词}"
+```
+
+### Step 3: 逐个关键词采集
+
+对每个关键词重复 Step 2，收集所有推文数据：
 - 作者（显示名 + @handle）
 - 发布时间
 - 推文正文
 - 互动数据（回复、转帖、喜欢、书签、观看数）
 - 是否包含图片/视频/引用
 
-#### 2d. 切换到"最新"标签
-
-点击"最新"标签（通常是 tab 元素），获取最新推文快照。
-
-#### 2e. 滚动加载更多（可选）
-
-如果内容不够丰富，使用 `evaluate_script` 执行 `window.scrollBy(0, 2000)` 滚动加载更多内容，然后再次截取快照。
-
-#### 2f. 搜索下一个关键词
-
-使用 `mcp__chrome_devtools__fill` 填充搜索框新关键词，按 Enter 搜索。
-或直接导航到新的搜索 URL。
-
-### Step 3: 汇总去重
+### Step 4: 汇总去重
 
 将所有搜索结果合并，按以下规则处理：
 - **去重**: 同一条推文可能在多个关键词下出现，按推文 URL 去重
 - **排序**: 按互动量（喜欢 + 转帖 + 书签）降序排列
 - **分类**: 按话题主题分组
 
-### Step 4: 输出结构化报告
+### Step 5: 输出结构化报告
 
 按以下格式输出汇总报告：
 
 ```markdown
-# Twitter AI Agent 热门内容汇总（{日期}）
+# Twitter {话题} 热门内容汇总（{日期}）
 
 > 搜索关键词：{关键词1}、{关键词2}、...
 > 数据来源：Twitter/X 热门 + 最新标签
@@ -120,17 +136,8 @@ https://x.com/search?q={URL编码的关键词}&src=typed_query&f=top
 
 ## 注意事项
 
-- Twitter 搜索需要登录状态，Chrome 必须已登录
-- 每次搜索之间适当等待，避免频率过高
-- 长推文可能被截断，snapshot 中会显示"显示更多"按钮
+- 每次搜索之间适当等待（`sleep 1`），避免频率过高
+- 长推文可能被截断，fxtwitter 通常能获取完整内容
 - 引用推文（Quote Tweet）的内容也要提取
-- 如果 Chrome DevTools 不可用，降级方案：使用 WebSearch 搜索 `site:x.com {关键词}`
 - 中文推特圈和英文推特圈的内容可能差异很大，建议都搜
-
-## 降级方案
-
-如果 Chrome DevTools MCP 不可用或未登录：
-
-1. 使用 `WebSearch` 搜索 `{话题} site:x.com` 或 `{话题} Twitter`
-2. 对搜索到的推文 URL，使用 read-tweet skill 的 fxtwitter 方法读取内容
-3. 用 `mcp__exa__web_search_exa` 搜索话题获取更广泛的网络内容作为补充
+- 如果某个搜索方式失败，自动降级到下一个方式
