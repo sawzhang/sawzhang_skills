@@ -33,23 +33,45 @@ allowed-tools: Bash, Read, Write, Glob, Grep
 which browser-use 2>/dev/null && echo "AVAILABLE" || echo "NOT_AVAILABLE"
 ```
 
-如果可用，对每个关键词：
+**重要**: 如果系统配置了代理（尤其是 SOCKS 代理），必须在每条 browser-use 命令前清除代理环境变量，否则 CDP 连接会失败：
 
 ```bash
-# 打开 Twitter 搜索页（热门）
-browser-use open "https://x.com/search?q={URL编码的关键词}&src=typed_query&f=top"
+# 所有 browser-use 命令都要加这个前缀
+ALL_PROXY= HTTP_PROXY= HTTPS_PROXY= http_proxy= https_proxy= all_proxy= \
+browser-use ...
+```
 
-# 获取页面状态（可点击元素列表）
+使用 `-b real` 模式复用用户真实 Chrome 的登录态（Twitter 需要登录才能搜索）：
+
+```bash
+# 首次打开，使用 real 模式（复用 Chrome 登录态）
+ALL_PROXY= HTTP_PROXY= HTTPS_PROXY= http_proxy= https_proxy= all_proxy= \
+browser-use -b real open "https://x.com/search?q={URL编码的关键词}&src=typed_query&f=top"
+
+# 等待页面加载
+sleep 3
+
+# 获取页面状态（包含推文内容）
+ALL_PROXY= HTTP_PROXY= HTTPS_PROXY= http_proxy= https_proxy= all_proxy= \
 browser-use state
 
 # 滚动加载更多
+ALL_PROXY= HTTP_PROXY= HTTPS_PROXY= http_proxy= https_proxy= all_proxy= \
 browser-use scroll down
 
 # 再次获取状态
+sleep 2
+ALL_PROXY= HTTP_PROXY= HTTPS_PROXY= http_proxy= https_proxy= all_proxy= \
 browser-use state
 ```
 
-从 state 输出中提取推文内容。
+从 state 输出中提取推文内容（作者、正文、互动数据等都在 accessibility tree 中）。
+
+**注意**:
+- 首次使用需要运行 `browser-use install` 安装 Chromium
+- 安装方式：`uv tool install browser-use`（不是 `curl install.sh`，那个只装 cookie 同步工具）
+- 搜索之间间隔 3-5 秒，避免 Twitter 限速（出现 "出错了" 页面）
+- 搜完后运行 `browser-use close` 关闭会话
 
 #### 方式 B: fxtwitter API + WebSearch
 
@@ -136,8 +158,9 @@ curl -s "https://nitter.net/search?f=tweets&q={URL编码的关键词}"
 
 ## 注意事项
 
-- 每次搜索之间适当等待（`sleep 1`），避免频率过高
+- 每次搜索之间等待 3-5 秒（`sleep 3`），Twitter 限速很严格
 - 长推文可能被截断，fxtwitter 通常能获取完整内容
 - 引用推文（Quote Tweet）的内容也要提取
 - 中文推特圈和英文推特圈的内容可能差异很大，建议都搜
 - 如果某个搜索方式失败，自动降级到下一个方式
+- browser-use 的 state 输出是 accessibility tree 格式，推文内容在 `<article>` 和 `<span>` 元素中
