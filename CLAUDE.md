@@ -6,6 +6,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 可复用的 Claude Code skills 集合。每个 skill 是一个独立目录，包含 `SKILL.md` 定义和相关脚本。Skills 可复制到 `~/.claude/skills/` 或通过触发词直接使用。
 
+## Versioning（必须遵守）
+
+Claude Code plugin 系统用 **version + gitCommitSha** 双重判断是否需要重新安装。cache 按版本号缓存，如果 `plugin.json` 的 version 不变，`/plugin update` 即使拉到新代码也不会刷新 cache。
+
+**规则：每次新增 skill、删除 skill、或对已有 skill 做重大修改时，必须 bump `plugins/sawzhang-skills/.claude-plugin/plugin.json` 的 `version` 字段。**
+
+- 新增/删除 skill → minor bump（如 `1.0.0` → `1.1.0`）
+- skill 内容重大修改 → patch bump（如 `1.1.0` → `1.1.1`）
+- 纯 typo/注释修改 → 可不 bump
+
+示例：
+```json
+{
+  "name": "sawzhang-skills",
+  "version": "1.1.0",
+  ...
+}
+```
+
 ## Adding a New Skill
 
 1. 在 `plugins/sawzhang-skills/skills/` 下创建新目录
@@ -19,6 +38,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
    ```
 3. 将相关脚本和配置放入同目录
 4. **注意**: `allowed-tools` 只能使用标准工具名（`Read, Write, Edit, Bash, Grep, Glob, Agent`），不支持 `WebFetch`、`WebSearch`、`mcp__*` 等扩展工具名，否则 skill 会静默加载失败
+5. **Bump `plugins/sawzhang-skills/.claude-plugin/plugin.json` 的 version**（minor bump）
 
 ## Skills
 
