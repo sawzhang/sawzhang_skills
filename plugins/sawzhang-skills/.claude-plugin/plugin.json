@@ -1,6 +1,6 @@
 {
   "name": "sawzhang-skills",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "可复用的 Claude Code skills 集合，包含 MCP Server 工具设计审查等实用技能",
   "author": {
     "name": "sawzhang"
