@@ -87,55 +87,9 @@ Twitter/X 话题搜索与汇总 - 通过 Browser Use CLI 操控真实 Chrome（`
 - **已知坑**: 系统代理需清除（`bu()` wrapper）、搜索间隔 5 秒防限速
 - **路径**: `plugins/sawzhang-skills/skills/twitter-research/`
 
-### CCA 系列（Claude Certified Architect 学习套件）
+### cca
 
-基于 Anthropic 官方 CCA 考试指南构建的交互式学习 skills，覆盖全部 5 个考试领域 + 模拟测验。
+CCA 完整学习套件 - 将原 7 个 skill（cca + cca-domain1~5 + cca-quiz）合并为单一 skill，内置路由逻辑，覆盖全部 5 个考试领域 + 12 道模拟测验题。
 
-#### cca
-
-CCA 学习总览与导航 - 展示考试全貌、5 大领域权重分布、推荐学习路径。
-
-- **触发词**: "CCA"、"学CCA"、"Claude架构师"
+- **触发词**: "CCA"、"学CCA"、"Claude架构师"、"学domain1~5"、"代理架构"、"工具设计"、"MCP集成"、"Claude Code配置"、"提示工程"、"上下文管理"、"CCA测验"、"模拟考试"
 - **路径**: `plugins/sawzhang-skills/skills/cca/`
-
-#### cca-domain1
-
-领域 1：代理架构与编排（27% 权重，最高）- 代理循环、协调器-子代理编排、hooks、session 管理。
-
-- **触发词**: "学domain1"、"代理架构"、"agent编排"
-- **路径**: `plugins/sawzhang-skills/skills/cca-domain1/`
-
-#### cca-domain2
-
-领域 2：工具设计与 MCP 集成（18%）- 工具描述、tool_choice、MCP 配置、内置工具选择。
-
-- **触发词**: "学domain2"、"工具设计"、"MCP集成"
-- **路径**: `plugins/sawzhang-skills/skills/cca-domain2/`
-
-#### cca-domain3
-
-领域 3：Claude Code 配置与工作流（20%）- CLAUDE.md 层级、rules/、commands/、skills、计划模式、CI/CD。
-
-- **触发词**: "学domain3"、"Claude Code配置"、"CLAUDE.md"
-- **路径**: `plugins/sawzhang-skills/skills/cca-domain3/`
-
-#### cca-domain4
-
-领域 4：提示工程与结构化输出（20%）- few-shot、tool_use JSON Schema、批处理 API、多遍审查。
-
-- **触发词**: "学domain4"、"提示工程"、"structured output"
-- **路径**: `plugins/sawzhang-skills/skills/cca-domain4/`
-
-#### cca-domain5
-
-领域 5：上下文管理与可靠性（15%）- 上下文保留、升级模式、错误传播、信息溯源。
-
-- **触发词**: "学domain5"、"上下文管理"、"可靠性"
-- **路径**: `plugins/sawzhang-skills/skills/cca-domain5/`
-
-#### cca-quiz
-
-CCA 模拟测验 - 12 道场景化单选题，按考试权重分配，含详细答案讲解和薄弱领域分析。
-
-- **触发词**: "CCA测验"、"模拟考试"、"cca quiz"
-- **路径**: `plugins/sawzhang-skills/skills/cca-quiz/`
