@@ -42,6 +42,16 @@ Claude Code plugin 系统用 **version + gitCommitSha** 双重判断是否需要
 
 ## Skills
 
+### sdd
+
+Harness Engineering 全流程开发 - 从 feature spec 到 PR 合并的完整自主开发 loop。所有「执行性质的工作」由 subagent 执行，Skill 负责编排，人工只在设计确认和 BLOCKED 时介入。
+
+- **触发词**: "自主开发"、"帮我实现"、"sdd"、"harness 开发"
+- **完整流程**: 设计（用户确认）→ 规划 → git worktree → TDD 实现 → spec/quality review → 质量关卡 → PR → Review 修复 → merge
+- **Harness 四要素**: 约束（worktree 隔离）/ 观测（状态协议）/ 校验（测试+lint+review）/ 回退（失败即停止上报）
+- **灵感来源**: @kasong2048 的 Harness Engineering 理念 + superpowers SDD + openclaw QA 策略
+- **路径**: `plugins/sawzhang-skills/skills/sdd/`
+
 ### mcp-review
 
 MCP Server 工具设计审查 - 按 10 条准则（Description 三段式、极简参数、扁平化、来源标注、命名规范、响应精简、格式一致、渐进式披露、写操作安全、敏感信息脱敏）逐一审查 tool 定义，输出结构化报告。
