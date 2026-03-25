@@ -4,14 +4,14 @@
 
 > 即装即用的 Claude Code 技能包 — MCP 工具审查、Twitter 调研、自动迭代优化、CCA 认证备考、Harness Engineering 全流程开发。
 
-[![Skills](https://img.shields.io/badge/skills-9-blue)]()
+[![Skills](https://img.shields.io/badge/skills-7-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 
 ## Why This Exists
 
 Claude Code is a general-purpose agent. But for specific workflows — reviewing MCP tool designs, researching Twitter trends, or studying for the CCA exam — you need **specialized instructions** that encode domain expertise. That's what skills are: reusable prompt packages that turn Claude into a domain specialist.
 
-## Skills (9)
+## Skills (7)
 
 ### Developer Tools
 
@@ -25,9 +25,7 @@ Claude Code is a general-purpose agent. But for specific workflows — reviewing
 
 | Skill | Description | Trigger |
 |-------|-------------|---------|
-| **harness-build** | Planner→Generator→Evaluator 3-phase build for complex projects with sprint contracts | "harness build", "用harness构建" |
-| **harness-qa** | Independent Evaluator — verify acceptance criteria without fixing anything | "harness qa", "独立评估" |
-| **harness-plan** | Decompose requirements into Sprint contracts with testable acceptance criteria | "harness plan", "规划一下" |
+| **harness** | 3-in-1 harness toolkit: build (Planner→Generator→Evaluator), QA (independent eval), plan (Sprint decomposition) | "harness build", "harness qa", "harness plan" |
 
 ### Twitter / X Research
 
@@ -91,9 +89,7 @@ sawzhang_skills/
 │           ├── mcp-review/      # MCP tool design audit
 │           ├── auto-iterate/    # Autonomous optimization loop
 │           ├── sdd/             # Harness Engineering dev loop
-│           ├── harness-build/   # Harness 3-phase build
-│           ├── harness-qa/      # Harness independent QA
-│           ├── harness-plan/    # Harness sprint planning
+│           ├── harness/          # Harness methodology toolkit (build/qa/plan)
 │           ├── twitter-research/# Twitter/X topic research
 │           ├── read-tweet/      # Single tweet reader
 │           └── cca/             # CCA complete study kit (5 domains + mock exam)
