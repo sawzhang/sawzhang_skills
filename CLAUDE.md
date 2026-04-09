@@ -101,3 +101,11 @@ Harness 方法论工具箱 - 基于 [Anthropic harness 研究](https://www.anthr
 - **触发词**: "harness"、"harness build"、"harness qa"、"harness plan"、"用harness构建"、"独立评估"、"规划一下"
 - **核心模式**: Sprint Contract + Context Reset + Generator↔Evaluator 循环
 - **路径**: `plugins/sawzhang-skills/skills/harness/`
+
+### xcrawl
+
+网页抓取与搜索工具 - 通过 xcrawl CLI 提供单页抓取（scrape）、网页搜索（search）、站点地图（map）、深度爬取（crawl）四大能力。
+
+- **触发词**: "抓取网页"、"scrape"、"爬取"、"xcrawl"、"搜索网页"、"web search"、"站点地图"、"crawl"
+- **前置依赖**: `npm install -g @xcrawl/cli && xcrawl login --browser`
+- **路径**: `plugins/sawzhang-skills/skills/xcrawl/`
