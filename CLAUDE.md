@@ -68,24 +68,14 @@ MCP Server 工具设计审查 - 按 10 条准则（Description 三段式、极�
 - **核心参数**: 目标文件、运行命令、指标名称、指标方向、时间预算
 - **灵感来源**: [autoresearch](https://github.com/karpathy/autoresearch) 的自主实验循环
 
-### read-tweet
+### twitter
 
-阅读 Twitter/X 推文 - 通过 fxtwitter API 代理绕过 JS 渲染限制，获取推文完整内容（正文、作者、互动数据等）。
+Twitter/X 一站式工具 - 读推文、搜索话题、发帖、发 thread。整合了原 read-tweet 和 twitter-research，新增 X API v2 发帖能力。
 
-- **触发词**: "读一下这条推文"、"read tweet"、"看看这条X"
-- **核心原理**: 将 `x.com` 域名替换为 `api.fxtwitter.com` 获取结构化数据
-- **路径**: `plugins/sawzhang-skills/skills/read-tweet/`
-
-### twitter-research
-
-Twitter/X 话题搜索与汇总 - 通过 Browser Use CLI 操控真实 Chrome（`-b real` 模式，复用登录态）搜索多关键词推文，去重分类后输出结构化报告。
-
-- **触发词**: "搜Twitter"、"查看Twitter上关于XX的讨论"、"twitter research"、"X上最近在聊什么"
-- **搜索方式**: Browser Use CLI（`-b real`，优先） → fxtwitter API 降级
-- **关键词策略**: 核心词、细分词、关联项目名、中英文双搜
-- **前置依赖**: `uv tool install browser-use && browser-use install`
-- **已知坑**: 系统代理需清除（`bu()` wrapper）、搜索间隔 5 秒防限速
-- **路径**: `plugins/sawzhang-skills/skills/twitter-research/`
+- **触发词**: "读推文"、"搜Twitter"、"发推"、"发thread"、"twitter post"、"twitter search"、"read tweet"
+- **四种模式**: read（fxtwitter API）、search（browser-use / fxtwitter）、post（X API v2 OAuth 1.0a）、thread（连续 post + reply）
+- **发帖依赖**: `pip3 install requests-oauthlib` + 环境变量 `X_API_KEY`、`X_API_SECRET`、`X_ACCESS_TOKEN`、`X_ACCESS_SECRET`
+- **路径**: `plugins/sawzhang-skills/skills/twitter/`
 
 ### cca
 
