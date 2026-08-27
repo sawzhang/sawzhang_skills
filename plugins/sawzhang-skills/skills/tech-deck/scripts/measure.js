@@ -43,7 +43,11 @@ const extraSel = flags.sel ? flags.sel.split(',').map(s => s.trim()).filter(Bool
 
 // 页码判据从文件名推导：P02-xxx.html → 组 P、序号 2；分母 = 同组最大序号。
 // 这样改了页序/加减页，footer 对不上会立刻被抓到，不需要另开配置。
-const all = listSlides([]);
+// 分母按 deck.json 的**完整大纲**算，不按已写完的页算 —— 否则写到第 3 页时 footer 的
+// "/ 17" 会被判成错，写完最后一页又得全部改回来。
+const all = deck.pages && deck.pages.length
+  ? deck.pages.map(n => n.replace(/\.(html|png)$/, '') + '.html')
+  : listSlides([]);
 const groupMax = {};
 for (const f of all) {
   const m = f.match(/^([A-Za-z]*)(\d+)/);

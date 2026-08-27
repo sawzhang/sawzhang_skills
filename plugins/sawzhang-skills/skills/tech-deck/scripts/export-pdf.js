@@ -16,7 +16,7 @@ const { SLIDES, parseArgs, loadDeck, listSlides } = require('./deck');
 
 const { flags } = parseArgs();
 const meta = loadDeck();
-const files = listSlides([]);
+const files = listSlides([], { requireAll: true });
 
 (async () => {
   const browser = await puppeteer.launch({ executablePath: findChrome(), headless: 'new', args: LAUNCH_ARGS });

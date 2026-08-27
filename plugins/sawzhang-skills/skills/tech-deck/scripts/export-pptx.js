@@ -13,7 +13,7 @@ const { SHOTS, loadDeck, listSlides } = require('./deck');
 if (!fs.existsSync(SHOTS)) { console.error(`没有 screenshots 目录：${SHOTS}（先跑 node scripts/render.js）`); process.exit(1); }
 
 const meta = loadDeck();
-const pages = listSlides([]).map(f => f.replace(/\.html$/, ''));
+const pages = listSlides([], { requireAll: true }).map(f => f.replace(/\.html$/, ''));
 
 const missing = pages.filter(n => !fs.existsSync(path.join(SHOTS, `${n}.png`)));
 if (missing.length) {                       // 缺图就停，不要产出一份少页的 pptx

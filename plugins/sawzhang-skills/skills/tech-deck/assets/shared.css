@@ -265,6 +265,12 @@ code, .kbd {
 .tk-item .t b { color: var(--accent); }
 .tk-item.warn { border-left-color: var(--red); } .tk-item.warn .n { color: var(--red); } .tk-item.warn .t b { color: var(--red); }
 
+/* 主图里出现 s4（= 强调橙）的页面，给 .slide 加 has-s4：图外的加粗强调自动退回墨色，
+   否则读者会把正文里的橙字读成"这是第 4 类"。规范里的那条规则，用一个 class 落地。 */
+.slide.has-s4 .tk-item .t b,
+.slide.has-s4 .cbox .cb b,
+.slide.has-s4 .lead b { color: var(--ink); }
+
 /* ══ 组件 F · 表格 ═══════════════════════════════════════════════════ */
 .tbl { width: 100%; border-collapse: collapse; }
 .tbl th {
