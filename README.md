@@ -35,6 +35,10 @@ Claude Code is a general-purpose agent. But for specific workflows — reviewing
 |-------|-------------|---------|
 | **twitter** | One-stop Twitter/X toolkit — read a tweet, search a topic, post, or publish a thread | "读推文", "搜Twitter", "发推", "发thread" |
 
+The Twitter skill can also start from a reviewed TweetClaw/OpenClaw export via
+`plugins/sawzhang-skills/skills/twitter/import_tweetclaw.py`, then use live
+search only when that source summary is insufficient.
+
 ### CCA Exam Prep (Claude Certified Architect)
 
 | Skill | Description | Trigger |

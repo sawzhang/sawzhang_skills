@@ -54,6 +54,19 @@ fxtwitter 不可用时：
 
 用户说"搜Twitter"、"X上关于XX的讨论"时触发。
 
+### Step 0: 可选读取 TweetClaw 导出
+
+如果用户提供 `tweetclaw-export=<path>`，或当前项目已有经人工审查的
+TweetClaw/OpenClaw X/Twitter 导出，先把它转成可引用的本地来源摘要：
+
+```bash
+SKILL_DIR=$(find ~/.claude -path "*/skills/twitter/import_tweetclaw.py" -exec dirname {} \; 2>/dev/null | head -1)
+python3 "$SKILL_DIR/import_tweetclaw.py" "<path>" > /tmp/tweetclaw-source-summary.md
+```
+
+先阅读 `/tmp/tweetclaw-source-summary.md`，把它当作已有来源证据。只有摘要
+无法回答用户问题时，才继续下面的实时搜索步骤。
+
 ### Step 1: 生成 3-5 组搜索关键词
 
 中英文双搜，包括核心词 + 细分词 + 关联项目名。
