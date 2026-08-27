@@ -74,16 +74,20 @@
 </body>
 ```
 
-### 3.1 为什么默认顶对齐（本版和上一代最重要的区别）
+### 3.1 `justify-content: safe center` —— 整套版式的地基
 
-上一代默认 `justify-content: center`，页面装不下时溢出会**对称地推向上下两头**：
+**不要改成裸 `center`。** 裸 center 在装不下时会把溢出**对称推向上下两头**：
 顶部的眉标和标题被裁掉，同时底部压上 footer，**两头都错**，而且
 
 > 中心线恒在 530，对称缩 padding（52/72 → 40/60）一点用都没有。
 > 「超出标称 padding」这件事**改 padding 修不了**。
 
-本版改成顶对齐：溢出只可能发生在底部，`measure.js` 量得到，修法只有一种 —— 砍内容。
-内容确实少的页面手动加 `class="center"`（`measure.js` 会在内容偏空时提醒你加）。
+`safe` 关键字让浏览器在溢出时**自动回退到顶对齐**。于是两头的好处都拿到：
+装得下就垂直居中（好看），装不下就只往下溢（`measure.js` 量得到，修法唯一 —— 砍内容）。
+
+实测：同一份 CSS 下溢出页 `top=52`（没被裁），正常页 `top=289`（居中）。
+页面**不需要**手写 `class="center"`；旧 deck 里写了的仍然有效（同义别名）。
+确实要顶对齐的页（比如逐行往下长的时间线）写 `class="top"`。
 
 ### 3.2 栏
 
@@ -167,7 +171,7 @@
 | 判据 | 阈值 | 含义 |
 |---|---|---|
 | 越过标称下沿 | `bottom > 1008` | 排满了 |
-| 内容偏空 | `bottom < 700` | 加 `class="center"` 或补内容 |
+| 内容总高过小 | `bottom - top < 300` | 这一页只有一个标题加一个框，考虑与相邻页合并 |
 | 列底不齐 | `spread > 140` | 建议补内容而非拉伸；90–140px 肉眼基本无感 |
 | 两栏已塞满 | review + c2 + 超下沿 | 改三栏 |
 | footer 中段过宽 | `> 1200px` | 快挤到左右两段了 |
@@ -196,13 +200,14 @@
 ```
 slides/            P01-xxx.html … A3-xxx.html + shared.css (+ fonts.css, fonts/)
 screenshots/       render.js 的产物，1920×1080 PNG
-scripts/           new-deck / render / measure / export-pptx / export-pdf / vendor-fonts / chrome / fonts / deck
+scripts/           new-deck / renumber / render / measure / export-pptx / export-pdf / vendor-fonts / chrome / fonts / deck
 deck.json          页顺序 + 元数据
 deck.pptx          位图，上台讲
 deck.pdf           真文本，发出去让人翻
 ```
 
 ```bash
+node scripts/renumber.js [--dry]        # 按 deck.json 重写 footer 页码与眉标编号
 node scripts/render.js [前缀…]          # 渲染，不带前缀=全部
 node scripts/measure.js [前缀…] [--json] [--sel .foo]
 node scripts/export-pptx.js             # 位图 PPTX

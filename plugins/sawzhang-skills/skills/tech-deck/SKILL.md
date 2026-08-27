@@ -40,7 +40,8 @@ node scripts/vendor-fonts.js      # 可选，一次联网；之后离线也能�
 
 1. `cp templates/<页型>.html slides/P07-xxx.html`
    （**文件名里的编号就是页码**，`measure.js` 拿它校验 footer 和眉标）
-2. 改内容。**第一件事是改 footer 的 `P07 / 18` 和眉标编号**，模板里那些是占位符
+2. 改内容。页码不用手改 —— 写完一批页跑一次 `node scripts/renumber.js`，
+   它按 deck.json 的顺序把每页 footer 的 `P07 / 18` 和眉标编号一次性对齐（`--dry` 只报告）
 3. `node scripts/render.js P07` — 只渲染这一页
 4. `node scripts/measure.js P07` — 拿判据。有 `--json` 给自动处理
 5. **只有 △ / ✗ 的页才** `Read screenshots/P07-xxx.png` 肉眼复核
@@ -67,7 +68,7 @@ node scripts/vendor-fonts.js      # 可选，一次联网；之后离线也能�
 - **强调色只有橙 `#E8730A`**；红只给风险/反面，绿只给正面。系列色 `s1..s6` 只在同一张图的分类维度里用，
   一旦绑定就全 deck 一致（⚠ `s4` = 强调橙，用到它的那页，图外强调改用**加粗 + `--ink`**）
 - **密排页三栏起步**（`.main.c3`）。两栏塞满再删内容或一路缩字号，都是把已核实的证据缩到不可读
-- **溢出只能砍内容**。本版页面顶对齐，装不下就往下溢，`measure.js` 直接 FAIL —— 改 padding 没用
+- **溢出只能砍内容**。页面用 `safe center`：装得下自动居中，装不下只往下溢并被 FAIL —— 改 padding 没用
 - **所有数字有出处**，footer 中段写「哪个文件 · 哪一节 · 复核日期」，短到不折行（`h ≤ 24px`）
 - **截断轴必须在图头声明**；不可比口径的两个数**不许相减**、不许说"增长"
 - **别用彩色 emoji**（`⭐ ✅ 🔵 ❌`）—— Chromium 走彩色字体、无视 CSS `color`。用 `✓ ✗ △ ○ ★ ①②③`

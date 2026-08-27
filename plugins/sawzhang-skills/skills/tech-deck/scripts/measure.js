@@ -25,7 +25,7 @@ const K = {
   HARD_BOT: 1046,     // 再往下就压到 footer 墨迹
   FOOTER_H: 24,       // 超过即 footer 折行
   RAGGED: 140,        // 两栏列底差，超过肉眼可见
-  SPARSE: 700,        // 内容下沿低于此值算「太空」
+  THIN: 300,          // 内容总高低于此值：这一页真的只有一个标题加一个框（三栏页本来就矮，别调高）
   SIDE_R: 1848,       // 右侧越界
   SIDE_L: 72,         // 左侧越界
 };
@@ -87,7 +87,6 @@ for (const f of all) {
       out.info.profile = profile;
       const isCover   = slide.classList.contains('cover');
       const isSection = slide.classList.contains('section');
-      const isChrome  = slide.classList.contains('center');
       out.info.kind = isCover ? 'cover' : isSection ? 'section' : 'content';
 
       // ── 1. 垂直边界 ────────────────────────────────────────────────
@@ -106,8 +105,9 @@ for (const f of all) {
       if (bot !== null) {
         if (bot > K.HARD_BOT) out.fails.push(`底部压到 footer：bottom=${bot} > ${K.HARD_BOT} —— 只能砍内容，缩 padding 没用`);
         else if (bot > K.NOM_BOT) out.notes.push(`越过标称下沿 ${bot - K.NOM_BOT}px（bottom=${bot}）—— 排满了，需肉眼复核一次`);
-        else if (bot < K.SPARSE && !isCover && !isSection && !isChrome)
-          out.notes.push(`内容偏空 bottom=${bot} —— 加 class="center" 居中，或补一块内容`);
+        // 页面默认 safe center，所以"下沿在哪"不代表满不满 —— 要看内容**总高**。
+        else if (top !== null && bot - top < K.THIN && !isCover && !isSection)
+          out.notes.push(`内容总高只有 ${bot - top}px —— 这一页信息量太小，考虑与相邻页合并`);
       }
 
       // ── 2. 水平越界 ────────────────────────────────────────────────

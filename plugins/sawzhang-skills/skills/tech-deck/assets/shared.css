@@ -84,22 +84,26 @@ body {
 }
 
 /* ══ 页面骨架 ═══════════════════════════════════════════════════════════
-   默认**顶对齐**。这是本版和上一代最重要的区别：上一代默认垂直居中，
-   页面一旦装不下，溢出会**对称地推向上下两头**，顶部的 tagline / 标题被裁掉，
-   而且改 padding 修不了（中心线不动）。顶对齐让溢出只发生在底部 ——
-   measure.js 能量到，修法也只有一种：砍内容。
-   内容确实少的页面，手动加 class="center"。 */
+   `justify-content: safe center` —— 这一条是整套版式的地基，别改成裸 center。
+   裸 center 在装不下时会把溢出**对称推向上下两头**：顶部的眉标和标题被裁掉，
+   底部同时压上 footer，两头都错，而且改 padding 修不了（中心线不动）。
+   `safe` 关键字让浏览器在溢出时**自动回退到顶对齐**：装得下就居中（好看），
+   装不下就只往下溢（measure.js 量得到，修法唯一：砍内容）。
+   实测：溢出页 top=52 不被裁，正常页 top=289 居中。 */
 .slide {
   position: relative;
   width: 1920px; height: 1080px;
   padding: 52px var(--pad-x) 72px;
   display: flex; flex-direction: column;
-  justify-content: flex-start;
+  justify-content: safe center;
   background: var(--bg);
   overflow: hidden;
 }
-.slide.center { justify-content: center; }
-.slide.cover  { justify-content: center; }
+/* 兼容旧 deck 手写的 .center；现在是默认行为，新页面不用写 */
+.slide.center { justify-content: safe center; }
+.slide.cover  { justify-content: safe center; }
+/* 明确要顶对齐的页（比如逐行往下长的时间线） */
+.slide.top    { justify-content: flex-start; }
 
 .chrome-top {
   position: absolute; top: 0; left: 0; right: 0; height: 4px;
