@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<!-- 页型 E · 代码页：技术分享的主角。规则：**只贴要讲的那几行**，用 .on 高亮重点，
+     行号由 <ol> 的 ::marker 自动出（别手写行号，一改就错位）。
+     review 上限 24 行 / talk 上限 12 行，超了 measure.js 会提醒。 -->
+<link rel="stylesheet" href="shared.css">
+</head><body data-profile="review">
+<div class="slide">
+  <div class="chrome-top"></div>
+  <div class="tagline">07 · 关键改动</div>
+  <h2>改动只有<span class="hl">一处</span>：把同步调用换成入队</h2>
+  <div class="lead">左边是改动本身，右边是它在真实流量下的表现 —— 代码和证据放同一页，避免"说了但没证"。</div>
+
+  <div class="main c2">
+    <div class="col">
+      <div class="fig-cap">Diff · worker/handler.ts</div>
+      <div class="code">
+        <div class="code-hd"><b>worker/handler.ts</b><span>L42–L53</span></div>
+        <ol start="42">
+          <li><span class="k">async function</span> <span class="f">handle</span>(job: Job) {</li>
+          <li>  <span class="k">const</span> ctx = <span class="k">await</span> <span class="f">loadContext</span>(job.id)</li>
+          <li class="del">  <span class="k">const</span> r = <span class="k">await</span> <span class="f">callDownstream</span>(ctx)  <span class="c">// 阻塞 ~2s</span></li>
+          <li class="del">  <span class="k">await</span> <span class="f">persist</span>(r)</li>
+          <li class="add">  <span class="k">await</span> queue.<span class="f">push</span>(<span class="s">'downstream'</span>, ctx)  <span class="c">// 入队即返回</span></li>
+          <li>  <span class="k">return</span> { accepted: <span class="k">true</span> }</li>
+          <li>}</li>
+        </ol>
+      </div>
+      <div class="fig-note">删掉的两行是全部延迟来源；<b>入队后立即返回</b>，下游失败由队列重试兜底。</div>
+    </div>
+
+    <div class="col">
+      <div class="fig-cap">上线后 · 真实流量</div>
+      <div class="term">
+        <div class="term-hd">bench · 2026-08-25 14:02</div>
+        <div class="body">
+          <div class="cmd">./bench --rps 200 --dur 5m</div>
+          <div class="out">p50   42ms</div>
+          <div class="out">p95  210ms</div>
+          <div class="out ok">p99  380ms   (was 2.4s)</div>
+          <div class="out err">drop  0.02%  队列积压 1.1w 峰值</div>
+        </div>
+      </div>
+      <div class="close3 c2">
+        <div class="cbox good"><div class="ch">达到目标</div><div class="cb">P99 <b>380ms</b> &lt; 500ms 验收线</div></div>
+        <div class="cbox warn"><div class="ch">新风险</div><div class="cb">积压峰值 <b>1.1w</b>，需要队列告警</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>P07 / 18</span>
+    <span>Source: PR #4821 · bench 2026-08-25 · 复核 2026-08-27</span>
+    <span>Tech Sharing</span>
+  </div>
+</div>
+</body></html>

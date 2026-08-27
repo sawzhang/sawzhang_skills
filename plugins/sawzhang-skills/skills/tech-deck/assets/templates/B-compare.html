@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<!-- 页型 B · 对照页：两个方案/两种口径并排。两栏不要求等高（列底差 ≤ 140px 肉眼无感）。 -->
+<link rel="stylesheet" href="shared.css">
+</head><body data-profile="review">
+<div class="slide">
+  <div class="chrome-top"></div>
+  <div class="tagline">05 · 方案取舍</div>
+  <h2>两条路都能跑通，差别在<span class="hl">失败时谁来兜底</span></h2>
+  <div class="lead">对照页的规则：两边用<b>同一组指标</b>比，不可比的指标就别放进同一张表。</div>
+
+  <div class="main c2">
+    <div class="col">
+      <div class="fig-cap">方案 A · 同步重试</div>
+      <div class="card">
+        <div class="stat-row">
+          <div class="stat ok"><div class="k">改动量</div><div class="v">3 文件</div><div class="d">一天能上</div></div>
+          <div class="stat bad"><div class="k">P99</div><div class="v">2.4s</div><div class="d">重试叠加</div></div>
+          <div class="stat mid"><div class="k">回滚</div><div class="v">分钟级</div><div class="d">改配置即可</div></div>
+        </div>
+      </div>
+      <div class="bars">
+        <div class="bar s1"><div class="bl">正常路径</div><div class="bt"><i style="--w:78%"></i></div><div class="bv">780ms</div></div>
+        <div class="bar s1"><div class="bl">一次重试</div><div class="bt"><i style="--w:100%"></i></div><div class="bv">2.4s</div></div>
+      </div>
+      <div class="src"><b>Source:</b> bench/sync-retry.json · 2026-08-20</div>
+    </div>
+
+    <div class="col">
+      <div class="fig-cap">方案 B · 队列异步</div>
+      <div class="card">
+        <div class="stat-row">
+          <div class="stat bad"><div class="k">改动量</div><div class="v">11 文件</div><div class="d">含运维</div></div>
+          <div class="stat ok"><div class="k">P99</div><div class="v">380ms</div><div class="d">解耦后</div></div>
+          <div class="stat bad"><div class="k">回滚</div><div class="v">小时级</div><div class="d">要清队列</div></div>
+        </div>
+      </div>
+      <div class="bars">
+        <div class="bar s3"><div class="bl">正常路径</div><div class="bt"><i style="--w:15%"></i></div><div class="bv">360ms</div></div>
+        <div class="bar s3"><div class="bl">积压 1w 条</div><div class="bt"><i style="--w:16%"></i></div><div class="bv">380ms</div></div>
+      </div>
+      <div class="src"><b>Source:</b> bench/queue.json · 2026-08-22</div>
+    </div>
+  </div>
+
+  <div class="close3 c2">
+    <div class="cbox good"><div class="ch">选 B，因为…</div><div class="cb">延迟是<b>用户能感知</b>的，改动量是我们自己吃的。</div></div>
+    <div class="cbox warn"><div class="ch">代价说清楚</div><div class="cb">回滚从分钟级退到<b>小时级</b>，需要先补队列的观测。</div></div>
+  </div>
+
+  <div class="footer-bar">
+    <span>P05 / 18</span>
+    <span>Source: bench/2026-08 · sync-retry + queue · 复核 2026-08-27</span>
+    <span>Tech Sharing</span>
+  </div>
+</div>
+</body></html>

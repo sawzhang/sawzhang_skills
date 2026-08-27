@@ -1,0 +1,18 @@
+{
+  "name": "tech-deck",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HTML/CSS → PNG → PPTX / PDF 的技术分享幻灯片工作流",
+  "scripts": {
+    "render": "node scripts/render.js",
+    "measure": "node scripts/measure.js",
+    "pptx": "node scripts/export-pptx.js",
+    "pdf": "node scripts/export-pdf.js",
+    "build": "node scripts/render.js && node scripts/measure.js && node scripts/export-pptx.js && node scripts/export-pdf.js"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pptxgenjs": "^4.0.1",
+    "puppeteer-core": "^24.40.0"
+  }
+}

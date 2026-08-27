@@ -92,6 +92,16 @@ Harness 方法论工具箱 - 基于 [Anthropic harness 研究](https://www.anthr
 - **核心模式**: Sprint Contract + Context Reset + Generator↔Evaluator 循环
 - **路径**: `plugins/sawzhang-skills/skills/harness/`
 
+### tech-deck
+
+技术分享幻灯片工作流 - HTML/CSS 写页面 → Chrome 渲染 1920×1080 → `measure.js` 机器体检版式 → 同时导出 PPTX（位图，上台讲）和 PDF（真文本，可选中可搜索）。
+
+- **触发词**: "做PPT"、"做幻灯片"、"做演示文稿"、"技术分享"、"架构评审"、"技术简报"、"make a deck"、"presentation"
+- **两套 profile**: `review` 密排（会议室/投屏，正文 14px、可三栏）/ `talk` 疏排（大场地，正文 ≥18px、最多两栏）—— 由 `<body data-profile>` 切换，选错只能重排
+- **核心是度量闭环**: 溢出、footer 折行、页码与文件名对不上、字号跌破下限、彩色 emoji、纯文字页、代码块过长，全部由 `scripts/measure.js` 判 ✗/△/✓，改完一页必跑
+- **字体预检**: 字体没加载直接停 —— 回落到系统字体后字宽变了，像素判据全部失真而 PNG 看着"还行"；离线用 `vendor-fonts.js` 固化
+- **路径**: `plugins/sawzhang-skills/skills/tech-deck/`
+
 ### xcrawl
 
 网页抓取与搜索工具 - 通过 xcrawl CLI 提供单页抓取（scrape）、网页搜索（search）、站点地图（map）、深度爬取（crawl）四大能力。

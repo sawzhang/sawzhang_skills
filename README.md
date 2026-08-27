@@ -1,17 +1,17 @@
 # sawzhang-skills
 
-**Plug-and-play skills that make Claude Code smarter — MCP review, Twitter research, auto-iteration, CCA exam prep, and Harness Engineering workflows.**
+**Plug-and-play skills that make Claude Code smarter — MCP review, technical slide decks, web crawling, Twitter research, auto-iteration, CCA exam prep, and Harness Engineering workflows.**
 
-> 即装即用的 Claude Code 技能包 — MCP 工具审查、Twitter 调研、自动迭代优化、CCA 认证备考、Harness Engineering 全流程开发。
+> 即装即用的 Claude Code 技能包 — MCP 工具审查、技术分享幻灯片、网页抓取、Twitter 调研、自动迭代优化、CCA 认证备考、Harness Engineering 全流程开发。
 
-[![Skills](https://img.shields.io/badge/skills-7-blue)]()
+[![Skills](https://img.shields.io/badge/skills-9-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 
 ## Why This Exists
 
 Claude Code is a general-purpose agent. But for specific workflows — reviewing MCP tool designs, researching Twitter trends, or studying for the CCA exam — you need **specialized instructions** that encode domain expertise. That's what skills are: reusable prompt packages that turn Claude into a domain specialist.
 
-## Skills (7)
+## Skills (9)
 
 ### Developer Tools
 
@@ -20,6 +20,8 @@ Claude Code is a general-purpose agent. But for specific workflows — reviewing
 | **mcp-review** | Audit MCP server tool designs against 10 best-practice rules, output a structured report with scores | "review mcp tools", "检查工具设计" |
 | **auto-iterate** | Autonomous optimization loop — set a metric, let Claude iterate until it improves | "自动迭代", "auto iterate", "overnight experiment" |
 | **sdd** | Harness Engineering full dev loop — design → plan → TDD → code review → PR, fully autonomous | "自主开发", "sdd", "harness 开发" |
+| **tech-deck** | Technical slide decks as code — HTML/CSS → machine-checked layout → PPTX (bitmap) + PDF (selectable text) | "做PPT", "技术分享", "架构评审", "make a deck" |
+| **xcrawl** | Scrape a page, search the web, map a site, or crawl it deeply via the xcrawl CLI | "抓取网页", "scrape", "web search", "crawl" |
 
 ### Harness Methodology (based on [Anthropic research](https://www.anthropic.com/engineering/harness-design-long-running-apps))
 
@@ -27,18 +29,18 @@ Claude Code is a general-purpose agent. But for specific workflows — reviewing
 |-------|-------------|---------|
 | **harness** | 3-in-1 harness toolkit: build (Planner→Generator→Evaluator), QA (independent eval), plan (Sprint decomposition) | "harness build", "harness qa", "harness plan" |
 
-### Twitter / X Research
+### Twitter / X
 
 | Skill | Description | Trigger |
 |-------|-------------|---------|
-| **twitter-research** | Search Twitter/X for a topic, summarize key discussions and sentiment | "搜Twitter", "twitter research" |
-| **read-tweet** | Read and analyze a specific tweet by URL | "读一下这条推文", "read tweet" |
+| **twitter** | One-stop Twitter/X toolkit — read a tweet, search a topic, post, or publish a thread | "读推文", "搜Twitter", "发推", "发thread" |
 
 ### CCA Exam Prep (Claude Certified Architect)
 
 | Skill | Description | Trigger |
 |-------|-------------|---------|
 | **cca** | Complete CCA study kit — all 5 domains (27%+18%+20%+20%+15%) + 12-question mock exam, built-in routing | "学CCA", "代理架构", "工具设计", "提示工程", "CCA测验" |
+| **vocab** | Self-contained English vocabulary assistant | "背单词", "查单词", "vocab" |
 
 ## Install
 
@@ -84,14 +86,16 @@ sawzhang_skills/
 ├── plugins/
 │   └── sawzhang-skills/
 │       ├── .claude-plugin/
-│       │   └── plugin.json      # Plugin metadata (v1.4.0)
+│       │   └── plugin.json      # Plugin metadata (v1.8.0)
 │       └── skills/
 │           ├── mcp-review/      # MCP tool design audit
 │           ├── auto-iterate/    # Autonomous optimization loop
 │           ├── sdd/             # Harness Engineering dev loop
-│           ├── harness/          # Harness methodology toolkit (build/qa/plan)
-│           ├── twitter-research/# Twitter/X topic research
-│           ├── read-tweet/      # Single tweet reader
+│           ├── harness/         # Harness methodology toolkit (build/qa/plan)
+│           ├── tech-deck/       # Technical slide decks (HTML → PPTX + PDF)
+│           ├── xcrawl/          # Web scrape / search / map / crawl
+│           ├── twitter/         # Twitter/X read, search, post, thread
+│           ├── vocab/           # English vocabulary assistant
 │           └── cca/             # CCA complete study kit (5 domains + mock exam)
 └── README.md
 ```

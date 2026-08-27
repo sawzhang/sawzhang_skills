@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<!-- 页型 A · 主图页：一张图撑满，下面三条要点收口。全 deck 的骨架图应当复用同一张底稿。 -->
+<link rel="stylesheet" href="shared.css">
+</head><body data-profile="review">
+<div class="slide">
+  <div class="chrome-top"></div>
+  <div class="tagline">03 · 系统分层</div>
+  <h2>整套系统分成<span class="hl">五层</span>，本次只动第三层</h2>
+  <div class="lead">一句话结论写在这里 —— 听众只记得住这一句，图是用来支撑它的。</div>
+
+  <div class="main c1">
+    <div class="col">
+      <div class="fig">
+        <div class="fig-cap">Figure 1 · 分层与本次改动范围</div>
+        <div class="fig-stack">
+          <div class="lyr s1"><div class="lnm">接入层<em>Gateway</em></div><div class="lbody">鉴权、限流、协议转换。本次<b>不动</b>。</div></div>
+          <div class="lyr s2"><div class="lnm">编排层<em>Orchestrator</em></div><div class="lbody">任务拆分与重试。本次<b>不动</b>。</div></div>
+          <div class="lyr s3 focus"><div class="lnm">执行层<em>Worker</em></div><div class="lbody">本次改动全部落在这里：<b>把同步调用换成队列</b>，P99 从 <span class="num">2.4s</span> 降到 <span class="num">380ms</span>。</div></div>
+          <div class="lyr s5"><div class="lnm">存储层<em>Storage</em></div><div class="lbody">读写比 <span class="num">9:1</span>，本次只加索引。</div></div>
+          <div class="lyr s6 dim"><div class="lnm">观测层<em>Observability</em></div><div class="lbody">还没建起来 —— 灰色表示<b>缺口</b>，是下一步。</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="takeaways c3">
+    <div class="tk-item"><div class="n">要点 01</div><div class="t">改动<b>只在执行层</b>，上下游接口不变</div></div>
+    <div class="tk-item"><div class="n">要点 02</div><div class="t">P99 <b>2.4s → 380ms</b>，压测口径见附录</div></div>
+    <div class="tk-item warn"><div class="n">风险</div><div class="t">观测层缺失，<b>回归只能靠压测</b></div></div>
+  </div>
+
+  <div class="footer-bar">
+    <span>P03 / 18</span>
+    <span>Source: bench/2026-08 压测报告 · §3.2 · 复核 2026-08-27</span>
+    <span>Tech Sharing</span>
+  </div>
+</div>
+</body></html>

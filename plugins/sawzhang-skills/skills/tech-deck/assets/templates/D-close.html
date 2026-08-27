@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<!-- 页型 D · 收束页：结论 / 下一步 / 要听众做什么。每场分享至少有一页 D，且放在最后。 -->
+<link rel="stylesheet" href="shared.css">
+</head><body data-profile="review">
+<div class="slide center">
+  <div class="chrome-top"></div>
+  <div class="tagline">18 · 结论</div>
+  <h2>三句话带走</h2>
+
+  <div class="main c1">
+    <div class="col">
+      <div class="callout">如果只记一句：<span class="hl">延迟问题不在下游，在我们自己的同步等待上。</span></div>
+      <div class="close3">
+        <div class="cbox good"><div class="ch">已经做到</div><div class="cb">P99 <b>2.4s → 380ms</b>，改动 11 个文件，已灰度 <b>7 天</b>。</div></div>
+        <div class="cbox"><div class="ch">还没做</div><div class="cb">队列观测与告警缺失，<b>回归只能靠压测</b>。下个迭代补。</div></div>
+        <div class="cbox warn"><div class="ch">需要你们做</div><div class="cb">调用方把超时从 <b>3s 调到 800ms</b>，否则拿不到这个收益。</div></div>
+      </div>
+      <div class="takeaways c3">
+        <div class="tk-item"><div class="n">下一步 01</div><div class="t">补队列观测（<b>本周</b>）</div></div>
+        <div class="tk-item"><div class="n">下一步 02</div><div class="t">调用方改超时（<b>下周</b>）</div></div>
+        <div class="tk-item"><div class="n">下一步 03</div><div class="t">全量上线（<b>月底</b>）</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>P18 / 18</span>
+    <span>Source: 本页结论对应 P05 / P07 / P11 · 复核 2026-08-27</span>
+    <span>Tech Sharing</span>
+  </div>
+</div>
+</body></html>

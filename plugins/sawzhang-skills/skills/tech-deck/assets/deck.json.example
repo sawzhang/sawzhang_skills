@@ -1,0 +1,17 @@
+{
+  "title": "Deck 标题",
+  "author": "你的团队",
+  "subject": "一句话主题",
+  "company": "Tech Sharing",
+  "out": "deck.pptx",
+
+  "profile": "review",
+  "taglineOffset": -1,
+
+  "pages": [
+    "P01-cover",
+    "P02-problem",
+    "P03-...",
+    "A1-appendix-..."
+  ]
+}

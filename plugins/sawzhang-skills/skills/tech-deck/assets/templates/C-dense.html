@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<!-- 页型 C · 密排页：大表 / 证据清单。**一上手就写三栏**，别两栏硬塞再删内容。
+     窄列 + 等宽长串会折行、行高翻倍 —— 优先加宽列（col.w-narrow），不要缩字号。 -->
+<link rel="stylesheet" href="shared.css">
+</head><body data-profile="review">
+<div class="slide">
+  <div class="chrome-top"></div>
+  <div class="tagline">11 · 证据清单</div>
+  <h2>逐项核过的<span class="hl">12 个接口</span>，口径和复核日期都在表里</h2>
+
+  <div class="main c3">
+    <div class="col">
+      <div class="fig-cap">A 组 · 读接口</div>
+      <table class="tbl">
+        <colgroup><col class="w-code"><col><col></colgroup>
+        <thead><tr><th>接口</th><th>P99</th><th>口径</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET /items</code></td><td><b>120ms</b></td><td>缓存命中</td></tr>
+          <tr><td><code>GET /items/:id</code></td><td><b>85ms</b></td><td>缓存命中</td></tr>
+          <tr><td><code>GET /search</code></td><td><b>640ms</b></td><td>全表扫</td></tr>
+          <tr class="grp"><td colspan="3">未覆盖：<b>2 个</b>灰度接口</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <div class="fig-cap">B 组 · 写接口</div>
+      <table class="tbl">
+        <colgroup><col class="w-code"><col><col></colgroup>
+        <thead><tr><th>接口</th><th>P99</th><th>口径</th></tr></thead>
+        <tbody>
+          <tr><td><code>POST /items</code></td><td><b>380ms</b></td><td>异步落库</td></tr>
+          <tr><td><code>PUT /items/:id</code></td><td><b>410ms</b></td><td>异步落库</td></tr>
+          <tr><td><code>DELETE /items/:id</code></td><td><b>95ms</b></td><td>软删</td></tr>
+          <tr class="grp"><td colspan="3">写放大 <b>1.4×</b>（见附录 A2）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <div class="fig-cap">口径声明</div>
+      <div class="callout">压测机与线上<b>不同规格</b>，绝对值仅供横向对比，<span class="hl">不要拿去承诺 SLA</span>。</div>
+      <table class="tbl">
+        <tbody>
+          <tr><td>样本</td><td><b>10 万</b>请求 / 接口</td></tr>
+          <tr><td>并发</td><td><b>200</b></td></tr>
+          <tr><td>复核</td><td>2026-08-27</td></tr>
+        </tbody>
+      </table>
+      <div class="fig-note">同一指标用不同口径量出来的两个数，<b>不许相减</b>、不许说"增长"，只能并列并注明口径。</div>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>P11 / 18</span>
+    <span>Source: bench/api-matrix.csv · 复核 2026-08-27</span>
+    <span>Tech Sharing</span>
+  </div>
+</div>
+</body></html>

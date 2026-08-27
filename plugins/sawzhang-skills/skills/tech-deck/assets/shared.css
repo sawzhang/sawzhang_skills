@@ -1,0 +1,359 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   tech-deck · shared.css
+   1920×1080 技术分享幻灯片的公共样式。两套 profile 由 <body data-profile> 切换：
+     review  密排 · 会议室/投屏/自己翻 PDF · 正文可到 14px · 允许三栏
+     talk    疏排 · 大场地演讲 · 正文 ≥ 18px · 最多两栏
+   排版尺寸全部走 --fs-* 变量，profile 只改变量，不改组件 —— 别在组件里写死 px。
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@import url('fonts.css');          /* vendor-fonts.js 生成的本地字体；没有时回落到下一行 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── 色板 · 浅底 ───────────────────────────────────────────────────── */
+  --bg:        #FFFFFF;
+  --bg-alt:    #F4F6FA;
+  --bg-panel:  #FAFBFD;
+  --ink:       #15192B;                  /* 主文字 */
+  --ink-2:     rgba(21,25,43,0.74);      /* 正文   */
+  --ink-3:     rgba(21,25,43,0.50);      /* 注脚   */
+  --ink-4:     rgba(21,25,43,0.32);      /* 页脚   */
+  --line:      rgba(21,25,43,0.10);
+
+  /* 唯一的通用强调色。正文里想强调什么，只有它 + 加粗两种手段。 */
+  --accent:      #E8730A;
+  --accent-bg:   rgba(232,115,10,0.08);
+  --accent-dim:  rgba(232,115,10,0.22);
+
+  /* 语义色：只表态度，不做装饰 */
+  --green:  #16A34A;   --green-bg: rgba(22,163,74,0.09);   /* 正面 / 通过 */
+  --red:    #DC3548;   --red-bg:   rgba(220,53,72,0.08);   /* 反面 / 风险 / 失败 */
+  --yellow: #D9A005;   --yellow-bg:rgba(217,160,5,0.10);   /* 待定 / 部分 */
+
+  /* 系列色 s1..s6：只用于「同一张图里的分类维度」（层、阶段、泳道、系列）。
+     一旦在某张图里把 s3 绑给某个含义，全 deck 的衍生图都得用同一个绑定。
+     ⚠ s4 = 强调橙。所以用到 s4 的那张图里，图外强调改用「加粗 + --ink」。 */
+  --s1: #2563EB;  --s2: #0891B2;  --s3: #16A34A;
+  --s4: #E8730A;  --s5: #7E55D6;  --s6: #94A3B8;
+
+  /* ── 字号刻度 · review（默认）────────────────────────────────────── */
+  --fs-h1:     64px;
+  --fs-h2:     34px;
+  --fs-h3:     20px;
+  --fs-lead:   16px;
+  --fs-body:   14px;
+  --fs-small:  12.5px;
+  --fs-micro:  11px;      /* 硬底 9.3px，别再往下调 */
+  --fs-mono:   11px;
+  --fs-cap:    11px;
+  --fs-footer: 11px;
+
+  --gap:       19px;      /* 栏间距 */
+  --pad-x:     80px;      /* 左右安全边 */
+  --radius:    11px;
+
+  --mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+  --sans: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+/* ── 字号刻度 · talk（大场地）───────────────────────────────────────── */
+body[data-profile="talk"] {
+  --fs-h1:     76px;
+  --fs-h2:     46px;
+  --fs-h3:     28px;
+  --fs-lead:   26px;
+  --fs-body:   21px;
+  --fs-small:  18px;
+  --fs-micro:  17px;
+  --fs-mono:   19px;
+  --fs-cap:    16px;
+  --fs-footer: 13px;
+  --gap:       28px;
+  --radius:    14px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+}
+
+/* ══ 页面骨架 ═══════════════════════════════════════════════════════════
+   默认**顶对齐**。这是本版和上一代最重要的区别：上一代默认垂直居中，
+   页面一旦装不下，溢出会**对称地推向上下两头**，顶部的 tagline / 标题被裁掉，
+   而且改 padding 修不了（中心线不动）。顶对齐让溢出只发生在底部 ——
+   measure.js 能量到，修法也只有一种：砍内容。
+   内容确实少的页面，手动加 class="center"。 */
+.slide {
+  position: relative;
+  width: 1920px; height: 1080px;
+  padding: 52px var(--pad-x) 72px;
+  display: flex; flex-direction: column;
+  justify-content: flex-start;
+  background: var(--bg);
+  overflow: hidden;
+}
+.slide.center { justify-content: center; }
+.slide.cover  { justify-content: center; }
+
+.chrome-top {
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--s1) 0%, var(--accent) 55%, var(--s5) 100%);
+}
+
+/* 眉标：编号 + 本页在讲什么。固定字号与字距，四页主图靠它对齐，别改。 */
+.tagline {
+  font-family: var(--mono); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px;
+}
+body[data-profile="talk"] .tagline { font-size: 15px; }
+
+h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 18px; }
+h2 { font-size: var(--fs-h2); font-weight: 800; line-height: 1.14; letter-spacing: -0.015em; margin-bottom: 12px; }
+h3 { font-size: var(--fs-h3); font-weight: 700; line-height: 1.3;  margin-bottom: 8px; }
+
+/* 导语：一句话说清本页结论。没有结论的页不该存在。 */
+.lead { font-size: var(--fs-lead); color: var(--ink-2); line-height: 1.55; margin-bottom: 16px; max-width: 1500px; }
+.lead b { color: var(--ink); font-weight: 700; }
+
+/* ── 主内容区 ─────────────────────────────────────────────────────────
+   align-items: start 必须写，否则栏会被拉齐高、内部块被撑开。 */
+.main { display: grid; gap: var(--gap); align-items: start; }
+.main.c1 { grid-template-columns: 1fr; }
+.main.c2 { grid-template-columns: 1fr 1fr; }
+.main.c3 { grid-template-columns: 1fr 1.02fr 1.02fr; }   /* 密排页从一开始就用它 */
+.col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+/* ── 页脚：页码 / Source / 品牌 ──────────────────────────────────────
+   中间那段一旦折行，footer 高度从 ~16px 变 30px+，会把左右两段挤歪并撞上正文。
+   measure.js 对 h > 24px 直接判 FAIL。修法是缩短字符串，不是缩字号。 */
+.footer-bar {
+  position: absolute; bottom: 22px; left: var(--pad-x); right: var(--pad-x);
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px;
+  font-family: var(--mono); font-size: var(--fs-footer); color: var(--ink-4);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.footer-bar > span:nth-child(1) { justify-self: start; }
+.footer-bar > span:nth-child(2) { justify-self: center; max-width: 100%; }
+.footer-bar > span:nth-child(3) { justify-self: end; font-weight: 700; color: var(--ink-3); }
+
+/* ══ 行内元素 ════════════════════════════════════════════════════════ */
+.hl   { color: var(--accent); font-weight: 700; }
+.ok   { color: var(--green); font-weight: 700; }
+.bad  { color: var(--red); font-weight: 700; }
+.num  { font-family: var(--mono); font-weight: 700; font-variant-numeric: tabular-nums; }
+/* ⚠ 等宽字体一律关连字：JetBrains Mono 默认把 -- != -> 连成单个字形，
+   贴命令行和代码时那是在改事实（--rps 会显示成 —rps）。 */
+code, .kbd, .num, .code, .term, .tbl td code, .src, .footer-bar, .tagline { font-variant-ligatures: none; }
+
+code, .kbd {
+  font-family: var(--mono); font-size: 0.92em;
+  background: var(--accent-bg); color: var(--accent);
+  padding: 1px 6px; border-radius: 4px;
+}
+.pill {
+  display: inline-block; padding: 3px 10px; border-radius: 5px;
+  font-size: var(--fs-micro); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--accent-bg); color: var(--accent);
+}
+.pill.ok  { background: var(--green-bg); color: var(--green); }
+.pill.bad { background: var(--red-bg);   color: var(--red); }
+.pill.mid { background: var(--yellow-bg);color: var(--yellow); }
+
+/* 出处标注。每个数字都要能追到这里。 */
+.src { font-family: var(--mono); font-size: var(--fs-micro); color: var(--ink-4); letter-spacing: 0.04em; margin-top: 8px; }
+.src b { color: var(--ink-3); font-weight: 600; }
+
+/* ══ 通用容器 ════════════════════════════════════════════════════════ */
+.card { background: var(--bg-panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+.card > h3 { margin-bottom: 6px; }
+.card p { font-size: var(--fs-body); color: var(--ink-2); line-height: 1.55; }
+
+/* 大字引语 / 全页论断 */
+.callout {
+  font-size: var(--fs-lead); font-weight: 500; line-height: 1.55; color: var(--ink);
+  padding: 16px 22px; background: var(--accent-bg);
+  border-left: 4px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;
+}
+.callout.bad  { background: var(--red-bg);   border-left-color: var(--red); }
+.callout.good { background: var(--green-bg); border-left-color: var(--green); }
+
+/* 图容器。⚠ 别给它 flex:1 —— 会在图下方造出一块死白。高度让内容决定。 */
+.fig { position: relative; }
+.fig-cap {
+  font-family: var(--mono); font-size: var(--fs-cap); font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 9px;
+}
+.fig-note { font-size: var(--fs-small); color: var(--ink-3); line-height: 1.5; margin-top: 8px; }
+
+/* ══ 系列色绑定 ══════════════════════════════════════════════════════ */
+.s1 { --sc: var(--s1); } .s2 { --sc: var(--s2); } .s3 { --sc: var(--s3); }
+.s4 { --sc: var(--s4); } .s5 { --sc: var(--s5); } .s6 { --sc: var(--s6); }
+.dim { opacity: 0.5; border-style: dashed !important; }   /* 「这一层还没长出来」 */
+
+/* ══ 组件 A · 分层堆叠（架构层次）═══════════════════════════════════ */
+.fig-stack { display: flex; flex-direction: column; gap: 9px; }
+.lyr {
+  display: grid; grid-template-columns: 200px 1fr; align-items: center; gap: 18px;
+  padding: 12px 16px; border-radius: 10px;
+  border: 1px solid color-mix(in oklab, var(--sc, var(--ink-4)) 34%, transparent);
+  background: linear-gradient(90deg,
+    color-mix(in oklab, var(--sc, var(--ink-4)) 9%, transparent),
+    color-mix(in oklab, var(--sc, var(--ink-4)) 2%, transparent));
+}
+.lyr .lnm { font-size: var(--fs-h3); font-weight: 700; color: var(--ink); line-height: 1.25; }
+.lyr .lnm em { display: block; font-style: normal; font-size: var(--fs-small); font-weight: 500; color: var(--ink-3); margin-top: 2px; }
+.lyr .lbody { font-size: var(--fs-body); color: var(--ink-2); line-height: 1.5; }
+.lyr .lbody b { color: var(--ink); font-weight: 700; }
+.lyr.focus { border-width: 2px; box-shadow: 0 0 0 4px color-mix(in oklab, var(--sc) 10%, transparent); }
+
+/* ══ 组件 B · 阶梯（能力线 / 成熟度 / 阶段）══════════════════════════ */
+.fig-ladder { display: grid; grid-template-columns: repeat(var(--steps, 6), 1fr); gap: 12px; align-items: end; }
+.step {
+  padding: 12px 13px; border-radius: 10px;
+  border: 1px solid color-mix(in oklab, var(--sc, var(--ink-4)) 34%, transparent);
+  background: color-mix(in oklab, var(--sc, var(--ink-4)) 5%, transparent);
+}
+.step .sn { font-family: var(--mono); font-size: var(--fs-cap); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sc); margin-bottom: 5px; }
+.step .st { font-size: var(--fs-h3); font-weight: 800; color: var(--ink); line-height: 1.2; margin-bottom: 8px; }
+.step .cap { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.5; }
+.step .cap b { color: var(--ink); }
+.step .tag { display: inline-block; margin-top: 8px; padding: 2px 8px; border-radius: 5px; font-family: var(--mono); font-size: var(--fs-micro); font-weight: 700; background: var(--accent-bg); color: var(--accent); }
+
+/* ══ 组件 C · 流程 / 管线（左→右）════════════════════════════════════ */
+.arch-flow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 26px; align-items: stretch; }
+.acol {
+  position: relative; padding: 12px 13px; border-radius: var(--radius);
+  border: 1px solid color-mix(in oklab, var(--sc, var(--ink-4)) 32%, transparent);
+  background: color-mix(in oklab, var(--sc, var(--ink-4)) 4%, transparent);
+}
+.acol::before {
+  content: '→'; position: absolute; left: -21px; top: 50%; transform: translateY(-50%);
+  font-family: var(--mono); font-size: var(--fs-lead); color: var(--ink-4);
+}
+.acol:first-child::before { content: none; }
+.acol .ah { font-family: var(--mono); font-size: var(--fs-cap); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sc); }
+.acol .an { font-size: var(--fs-h3); font-weight: 800; color: var(--ink); line-height: 1.2; margin: 2px 0 8px; }
+.acol .an em { display: block; font-style: normal; font-size: var(--fs-small); font-weight: 500; color: var(--ink-3); margin-top: 2px; }
+.acol .p { font-size: var(--fs-small); line-height: 1.4; color: var(--ink-2); padding: 5px 9px; border-radius: 7px; background: var(--bg-panel); border: 1px solid var(--line); margin-top: 5px; }
+.acol .p b { color: var(--ink); font-weight: 700; }
+.acol .p.slot { border-color: var(--accent); border-width: 2px; background: var(--accent-bg); }
+
+/* ══ 组件 D · 结论三块（每页最后一行）═══════════════════════════════ */
+.close3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+.close3.c2 { grid-template-columns: 1fr 1fr; }
+.cbox { padding: 13px 16px; border-radius: var(--radius); background: var(--bg-panel); border: 1px solid var(--line); border-left: 3px solid var(--ink-4); }
+.cbox .ch { font-size: var(--fs-small); font-weight: 700; color: var(--ink); margin-bottom: 5px; line-height: 1.3; }
+.cbox .cb { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.5; }
+.cbox .cb b { color: var(--ink); font-weight: 700; }
+.cbox.good { border-left-color: var(--green); } .cbox.good .ch { color: var(--green); }
+.cbox.warn { border-left-color: var(--red);   } .cbox.warn .ch { color: var(--red); }
+
+/* ══ 组件 E · 要点条 ═════════════════════════════════════════════════ */
+.takeaways { display: grid; gap: 10px; margin-top: 12px; }
+.takeaways.c2 { grid-template-columns: 1fr 1fr; }
+.takeaways.c3 { grid-template-columns: repeat(3, 1fr); }
+.tk-item { padding: 11px 14px; background: var(--bg-panel); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 9px; }
+.tk-item .n { font-family: var(--mono); font-size: var(--fs-cap); font-weight: 700; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 3px; }
+.tk-item .t { font-size: var(--fs-body); color: var(--ink); font-weight: 600; line-height: 1.45; }
+.tk-item .t b { color: var(--accent); }
+.tk-item.warn { border-left-color: var(--red); } .tk-item.warn .n { color: var(--red); } .tk-item.warn .t b { color: var(--red); }
+
+/* ══ 组件 F · 表格 ═══════════════════════════════════════════════════ */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th {
+  font-family: var(--mono); font-size: var(--fs-micro); font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4);
+  text-align: left; padding: 8px 11px; border-bottom: 1px solid var(--line);
+}
+.tbl td { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.45; padding: 7px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tbl td b { color: var(--ink); font-weight: 700; }
+.tbl td code { font-size: var(--fs-mono); }
+.tbl tr.grp td { background: var(--bg-alt); font-weight: 700; color: var(--ink); }
+.tbl tr:last-child td { border-bottom: none; }
+/* ⚠ 窄固定列 + 等宽长串会折行、行高翻倍 —— 优先加宽列，不要缩字号。
+   放接口名/文件名的那一列直接用 w-code；还折就再加宽，别动 font-size。 */
+.tbl col.w-code  { width: 168px; }
+.tbl col.w-tight { width: 96px; }
+
+/* ══ 组件 G · 指标条 ═════════════════════════════════════════════════ */
+.stat-row { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; }
+.stat { padding: 9px 12px; border-radius: 9px; background: var(--bg-panel); border: 1px solid var(--line); }
+.stat .k { font-family: var(--mono); font-size: var(--fs-cap); color: var(--ink-4); letter-spacing: 0.08em; text-transform: uppercase; }
+.stat .v { font-size: var(--fs-h3); font-weight: 800; line-height: 1.15; margin-top: 3px; font-variant-numeric: tabular-nums; }
+.stat .d { font-size: var(--fs-micro); color: var(--ink-3); margin-top: 2px; line-height: 1.35; }
+.stat.ok  { border-color: color-mix(in oklab, var(--green) 42%, transparent); } .stat.ok  .v { color: var(--green); }
+.stat.bad { border-color: color-mix(in oklab, var(--red) 42%, transparent); }   .stat.bad .v { color: var(--red); }
+.stat.mid { border-color: color-mix(in oklab, var(--yellow) 48%, transparent); }.stat.mid .v { color: var(--yellow); }
+
+/* ══ 组件 H · 横向条形图 ═════════════════════════════════════════════
+   只做横向条。竖条放在 flex 列里会被 flex-shrink 压扁，要用就自己写 grid-template-rows。 */
+.bars { display: grid; gap: 7px; }
+.bar { display: grid; grid-template-columns: 150px 1fr 74px; align-items: center; gap: 10px; }
+.bar .bl { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.3; }
+.bar .bt { height: 15px; border-radius: 4px; background: var(--bg-alt); position: relative; overflow: hidden; }
+.bar .bt i { position: absolute; left: 0; top: 0; bottom: 0; display: block; border-radius: 4px; background: var(--sc, var(--accent)); width: var(--w, 0%); }
+.bar .bv { font-family: var(--mono); font-size: var(--fs-small); font-weight: 700; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+/* 轴被截断时必须在图头写明，否则就是在用视觉夸大差距。 */
+.axis-note { font-family: var(--mono); font-size: var(--fs-micro); color: var(--red); margin-bottom: 6px; }
+
+/* ══ 组件 I · 代码块 ═════════════════════════════════════════════════
+   技术分享的主角。规则：只贴要讲的那几行，用 .on 高亮重点行，别整屏倾泻。
+   行号由 <ol> 的 ::marker 出，不要手写行号（手写的一改就错位）。 */
+.code {
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-panel);
+}
+.code-hd {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 6px 12px; background: var(--bg-alt); border-bottom: 1px solid var(--line);
+  font-family: var(--mono); font-size: var(--fs-cap); color: var(--ink-3); letter-spacing: 0.06em;
+}
+.code-hd b { color: var(--ink-2); font-weight: 700; }
+.code ol { list-style: decimal; padding: 8px 12px 8px 46px; margin: 0; }
+.code li {
+  font-family: var(--mono); font-size: var(--fs-mono); line-height: 1.62;
+  color: var(--ink-2); white-space: pre; padding: 0 6px; border-radius: 3px;
+}
+.code li::marker { color: var(--ink-4); font-size: 0.88em; content: counter(list-item); }
+.code li.on { background: var(--accent-bg); color: var(--ink); font-weight: 600; }
+.code li.on::marker { color: var(--accent); }
+.code li.add { background: var(--green-bg); } .code li.add::marker { color: var(--green); }
+.code li.del { background: var(--red-bg); opacity: 0.72; text-decoration: line-through; }
+/* 可选的手工着色，不上色也合规 */
+.code .k { color: #7E55D6; font-weight: 600; }   /* 关键字 */
+.code .f { color: var(--s1); }                   /* 函数名 */
+.code .s { color: var(--green); }                /* 字符串 */
+.code .c { color: var(--ink-4); font-style: italic; } /* 注释 */
+
+/* ══ 组件 J · 终端 / 日志 ════════════════════════════════════════════ */
+.term { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #0F1320; }
+.term-hd { padding: 6px 12px; background: rgba(255,255,255,0.06); font-family: var(--mono); font-size: var(--fs-cap); color: rgba(255,255,255,0.55); letter-spacing: 0.06em; }
+.term .body { padding: 9px 12px; font-family: var(--mono); font-size: var(--fs-mono); line-height: 1.6; }
+.term .cmd { color: #E6E9F2; white-space: pre-wrap; }
+.term .cmd::before { content: '$ '; color: var(--accent); font-weight: 700; }
+.term .out { color: rgba(230,233,242,0.62); white-space: pre-wrap; }
+.term .out.ok  { color: #4ADE80; }
+.term .out.err { color: #FB7185; }
+
+/* ══ 封面 ════════════════════════════════════════════════════════════ */
+.slide.cover h1 { max-width: 1500px; }
+.cover-meta { display: flex; gap: 26px; align-items: center; margin-top: 26px; font-family: var(--mono); font-size: 15px; color: var(--ink-3); letter-spacing: 0.1em; text-transform: uppercase; }
+body[data-profile="talk"] .cover-meta { font-size: 20px; }   /* review 15px 会跌破 talk 的 16px 下限 */
+.cover-meta .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+/* ══ 转场页 ══════════════════════════════════════════════════════════ */
+.slide.section { justify-content: center; }
+.slide.section .n { font-family: var(--mono); font-size: 96px; font-weight: 700; color: var(--accent-dim); line-height: 1; margin-bottom: 12px; }
+.slide.section h2 { font-size: var(--fs-h1); }
+
+/* ══ talk profile 的结构性约束 ═══════════════════════════════════════
+   大场地不许三栏。这里**故意不做静默降级** —— 写了 .main.c3 就让它三栏渲染出来，
+   由 measure.js 报 FAIL 逼你改。CSS 偷偷改成两栏 = 违规被藏起来，比违规本身更糟。 */
+body[data-profile="talk"] .close3 { grid-template-columns: 1fr 1fr; }
+body[data-profile="talk"] .lyr    { grid-template-columns: 260px 1fr; }
